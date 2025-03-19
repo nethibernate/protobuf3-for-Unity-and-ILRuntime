@@ -67,6 +67,9 @@ void WriteDocCommentBodyImpl(io::Printer* printer, SourceLocation location) {
     // (We don't skip "just whitespace" lines, either.)
     for (std::vector<string>::iterator it = lines.begin(); it != lines.end(); ++it) {
         string line = *it;
+        while (!line.empty() && (line.back() == '\r' || line.back() == '\n')) {
+            line.pop_back();
+        }
         if (line.empty()) {
             last_was_empty = true;
         } else {
@@ -74,7 +77,7 @@ void WriteDocCommentBodyImpl(io::Printer* printer, SourceLocation location) {
                 printer->Print("///\n");
             }
             last_was_empty = false;
-            printer->Print("///$line$\n", "line", *it);
+            printer->Print("///$line$\n", "line", line);
         }
     }
     printer->Print("/// </summary>\n");

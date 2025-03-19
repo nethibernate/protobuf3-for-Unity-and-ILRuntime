@@ -125,10 +125,15 @@ static void WriteDocCommentBodyForLocation(
       // Most lines should start with a space.  Watch out for lines that start
       // with a /, since putting that right after the leading asterisk will
       // close the comment.
-      if (!lines[i].empty() && lines[i][0] == '/') {
-        printer->Print(" * $line$\n", "line", lines[i]);
+      string line = lines[i];
+      while (!line.empty() && (line.back() == '\r' || line.back() == '\n')) {
+        line.pop_back();
+      }
+      
+      if (!line.empty() && line[0] == '/') {
+        printer->Print(" * $line$\n", "line", line);
       } else {
-        printer->Print(" *$line$\n", "line", lines[i]);
+        printer->Print(" *$line$\n", "line", line);
       }
     }
     printer->Print(
